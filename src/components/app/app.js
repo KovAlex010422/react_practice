@@ -12,9 +12,9 @@ class App extends Component {
     super(props);
     this.state = {
       data: [
-        { id: 1, name: 'Jhon D.', salary: 800, increase: false },
-        { id: 2, name: 'David E.', salary: 3000, increase: true },
-        { id: 3, name: 'Bob K.', salary: 5000, increase: false },
+        { id: 1, name: 'Jhon D.', salary: 800, increase: false, rise: true },
+        { id: 2, name: 'David E.', salary: 3000, increase: true, rise: false },
+        { id: 3, name: 'Bob K.', salary: 5000, increase: false, rise: false },
       ]
     }
   }
@@ -36,7 +36,7 @@ class App extends Component {
     })
   }
 
-  onToggleIncrease = (id) => {
+  onToggleProp = (id, prop) => {
     this.setState(({ data }) => ({
       // const index = data.findIndex(elem => elem.id === id),
       //       old = data[index],
@@ -45,35 +45,36 @@ class App extends Component {
 
 
       data: data.map(el => {
-        if(el.id === id){
-        return {...el, increase: !el.increase}
-      }
+        if (el.id === id) {
+          return { ...el, [prop]: !el[prop] }
+        }
         return el
-    })
-  }))
-}
+      })
+    }))
+  }
+  render() {
+    const empl = this.state.data.length;
+    const emplIncr = this.state.data.filter(el => el.increase).length
+    return (
+      <div className="app">
+        <AppInfo empl={empl} emplIncr={emplIncr} />
+        
+        <div className="search-panel">
+          <SearchPanel />
+          <AppFilter />
+        </div>
 
-render() {
-  return (
-    <div className="app">
-      <AppInfo />
-
-      <div className="search-panel">
-        <SearchPanel />
-        <AppFilter />
+        <EmployeesList
+          data={this.state.data}
+          onDelete={this.deleteItem}
+          onToggleProp={this.onToggleProp}
+        />
+        <EmployeesAddForm
+          createEmpl={this.createEmpl}
+        />
       </div>
-
-      <EmployeesList
-        data={this.state.data}
-        onDelete={this.deleteItem}
-        onToggleIncrease={this.onToggleIncrease}
-      />
-      <EmployeesAddForm
-        createEmpl={this.createEmpl}
-      />
-    </div>
-  );
-}
+    );
+  }
 }
 
 
